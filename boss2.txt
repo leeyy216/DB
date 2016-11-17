@@ -1,0 +1,55 @@
+#boss2按照下述语句操作 by刘叶静
+
+#CREATE VIEW `boos2_test1` AS SELECT `result3`.`order_no` AS `order_no`, max(`result3`.`handle_time`) AS `max(handle_time)` FROM `result3` WHERE ( `result3`.`handle_type` = cast( '新增发起售中方案' AS CHAR charset BINARY )) GROUP BY `result3`.`order_no`
+#CREATE VIEW `boos2_test1` AS SELECT `result3`.`order_no` AS `order_no`, max(`result3`.`handle_time`) AS `max(handle_time)` FROM `result3` WHERE ( `result3`.`handle_type` = cast( '新增发起售中方案' AS CHAR charset BINARY )) GROUP BY `result3`.`order_no`
+#CREATE TABLE boss2_result AS SELECT boos2_test1.`max(handle_time)`, boss2_test2.`min(handle_time)`, boos2_test1.order_no FROM boos2_test1 LEFT JOIN boss2_test2 ON boos2_test1.order_no = boss2_test2.order_no
+#ALTER table boss2_result add COLUMN datediff int DEFAULT null;
+#update boss2_result set boss2_result.`min(handle_time)`=LAST_DAY(boss2_result.`max(handle_time)`) where boss2_result.`min(handle_time)` is null
+#update boss2_result set boss2_result.datediff=DATEDIFF(boss2_result.`min(handle_time)`,boss2_result.`max(handle_time)`) 
+
+
+
+CREATE VIEW `boos2_test1` AS SELECT
+	`result3`.`order_no` AS `order_no`,
+	max(`result3`.`handle_time`) AS `max(handle_time)`
+FROM
+	`result3`
+WHERE
+	(
+		`result3`.`handle_type` = cast(
+			'新增发起售中方案' AS CHAR charset BINARY
+		)
+	)
+GROUP BY
+	`result3`.`order_no` CREATE VIEW `boos2_test1` AS SELECT
+		`result3`.`order_no` AS `order_no`,
+		max(`result3`.`handle_time`) AS `max(handle_time)`
+	FROM
+		`result3`
+	WHERE
+		(
+			`result3`.`handle_type` = cast(
+				'新增发起售中方案' AS CHAR charset BINARY
+			)
+		)
+	GROUP BY
+		`result3`.`order_no` CREATE TABLE boss2_result AS SELECT
+			boos2_test1.`max(handle_time)`,
+			boss2_test2.`min(handle_time)`,
+			boos2_test1.order_no
+		FROM
+			boos2_test1
+		LEFT JOIN boss2_test2 ON boos2_test1.order_no = boss2_test2.order_no ALTER TABLE boss2_result ADD COLUMN datediff INT DEFAULT NULL;
+
+UPDATE boss2_result
+SET boss2_result.`min(handle_time)` = LAST_DAY(
+	boss2_result.`max(handle_time)`
+)
+WHERE
+	boss2_result.`min(handle_time)` IS NULL UPDATE boss2_result
+SET boss2_result.datediff = DATEDIFF(
+	boss2_result.`min(handle_time)`,
+	boss2_result.`max(handle_time)`
+)
+select * from boss2_result
+#然后可自行根据count(*) 查出不符合条件和所有的，求出占的百分比
