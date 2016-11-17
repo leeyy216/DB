@@ -53,3 +53,23 @@ SET boss2_result.datediff = DATEDIFF(
 )
 select * from boss2_result
 #然后可自行根据count(*) 查出不符合条件和所有的，求出占的百分比
+
+
+
+#lyyboss2 by 李元祎
+
+#DROP TABLE lyyboss2;
+CREATE TABLE lyyboss2 AS 
+	SELECT boos2_test1.`max(handle_time)` max,boss2_test2.`min(handle_time)` min,boos2_test1.order_no num
+	FROM boos2_test1 LEFT JOIN boss2_test2
+	ON boos2_test1.order_no = boss2_test2.order_no;
+
+ALTER TABLE lyyboss2 ADD COLUMN diff INT;
+
+UPDATE lyyboss2 
+	SET min = LAST_DAY(max)
+	WHERE min IS NULL;
+
+UPDATE lyyboss2 SET diff = DATEDIFF(lyyboss2.min,lyyboss2.max);
+
+SELECT * FROM lyyboss2
